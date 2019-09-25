@@ -10,7 +10,12 @@
 #    store-type: none
 
 spring:
-
+  datasource:
+      type: com.alibaba.druid.pool.DruidDataSource
+      driver-class-name: oracle.jdbc.driver.OracleDriver
+      url: jdbc:oracle:thin:@172.21.130.130:1533:labdwt01
+      username: DW_ADMIN
+      password: admin_dw123
 
   session:
       store-type: none
@@ -25,5 +30,6 @@ server:
 imooc:
   security:
     browser:
-      loginPage: /demo-signIn.html
-      loginResponseType: REDIRECT
+#      loginPage: /demo-signIn.html
+#      loginResponseType: REDIRECT
+      loginResponseType: JSON
