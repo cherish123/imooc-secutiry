@@ -9,6 +9,7 @@
 #  session:
 #    store-type: none
 
+
   session:
       store-type: none
 
@@ -25,3 +26,9 @@ imooc:
 #      loginPage: /demo-signIn.html
 #      loginResponseType: REDIRECT
       loginResponseType: JSON
+    code:
+      image:
+        width: 67
+        height: 100
+        url:
+#        url: /user,/user/*
