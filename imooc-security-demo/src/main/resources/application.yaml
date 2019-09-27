@@ -32,3 +32,5 @@ imooc:
         height: 100
         url:
 #        url: /user,/user/*
+      sms:
+        length: 4

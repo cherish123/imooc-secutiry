@@ -19,4 +19,10 @@ public class ValidateCodeBeanConfig {
         codeGenerator.setSecurityProperties(securityProperties);
         return codeGenerator;
     }
+
+    @Bean
+    @ConditionalOnMissingBean(SmsCodeSender.class)
+    public SmsCodeSender smsCodeSender(){
+        return new DefaultSmsCodeSender();
+    }
 }
