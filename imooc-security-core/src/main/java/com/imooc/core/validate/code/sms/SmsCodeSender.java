@@ -1,4 +1,4 @@
-package com.imooc.core.validate.code;
+package com.imooc.core.validate.code.sms;
 
 public interface SmsCodeSender {
     void send(String mobile,String code);

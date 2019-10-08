@@ -1,7 +1,7 @@
-package com.imooc.core.validate.code;
+package com.imooc.core.validate.code.sms;
 
 
-import org.springframework.stereotype.Component;
+import com.imooc.core.validate.code.sms.SmsCodeSender;
 
 //@Component("smsCodeSender")
 public class DefaultSmsCodeSender implements SmsCodeSender {

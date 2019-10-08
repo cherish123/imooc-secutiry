@@ -10,22 +10,27 @@
 #    store-type: none
 
 
-  session:
-      store-type: none
+session:
+  store-type: none
+
 
 #security:
 #  basic:
 #    enabled: false
 server:
   port: 8090
+  #对tomcat进行了一个优化配置
+  tomcat:
+    min-spare-threads: 20
+    max-threads: 100
+    max-connections: 5000
 
 
 imooc:
   security:
-    browser:
+#    browser:
 #      loginPage: /demo-signIn.html
 #      loginResponseType: REDIRECT
-      loginResponseType: JSON
     code:
       image:
         width: 67
@@ -34,3 +39,7 @@ imooc:
 #        url: /user,/user/*
       sms:
         length: 4
+
+#logging:
+#  level:
+#    org.springframework.security: debug
