@@ -1,81 +1,85 @@
 package com.imooc.security.browser;
 
+import com.imooc.core.authentication.AbstractChannelSecurityConfig;
+import com.imooc.core.config.SmsValidateSecurityConfigure;
+import com.imooc.core.config.ValidateCodeSecurityConfig;
 import com.imooc.core.properties.SecurityProperties;
-import com.imooc.core.validate.code.ValidateCodeFilter;
+import com.imooc.core.validate.code.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import javax.sql.DataSource;
 
 @Configuration
-public class BrowserConfig extends WebSecurityConfigurerAdapter {
-
-
-    @Bean
-    public PasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Autowired
-    private AuthenticationSuccessHandler imoocAuthenticationSuccessHandler;
-
-    @Autowired
-    private AuthenticationFailureHandler imoocAuthenticationFailureHandler;
+public class BrowserConfig extends AbstractChannelSecurityConfig {
 
     @Autowired
     private SecurityProperties securityProperties;
 
+    /*@Autowired
+    private AuthenticationSuccessHandler asusAuthenticationSuccessHandler;
+
+    @Autowired
+    private AuthenticationFailureHandler asusAuthenticationFailureHandler;*/
+
+
+
 //    @Autowired
 //    private DataSource dataSource;
-//
+
 //    @Autowired
-//    private UserDetailsService userDetailsService;
-//
+//    private DruidDataSource druidDataSource;
+
+
+    @Autowired
+    private SmsValidateSecurityConfigure smsValidateSecurityConfigure;
+
+    @Autowired
+    private ValidateCodeSecurityConfig validatorCodeSecurityConfig;
+
 //    @Bean
 //    public PersistentTokenRepository persistentTokenRepository() {
 //        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
 //        tokenRepository.setDataSource(dataSource);
-//        tokenRepository.setCreateTableOnStartup(true);
+////        tokenRepository.setDataSource(druidDataSource);
+////        tokenRepository.setCreateTableOnStartup(true);
 //        return tokenRepository;
 //    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        ValidateCodeFilter validateCodeFilter = new ValidateCodeFilter();
-        validateCodeFilter.setAuthenticationFailureHandler(imoocAuthenticationFailureHandler);
-        validateCodeFilter.setSecurityProperties(securityProperties);
-        validateCodeFilter.afterPropertiesSet();
+        applyPasswordAuthenticationConfig(http);
+       /* ValidatorCodeFilter validatorCodeFilter = new ValidatorCodeFilter();
+        validatorCodeFilter.setAuthenticationFailureHandler(asusAuthenticationFailureHandler);
+        validatorCodeFilter.setSecurityProperties(securityProperties);
+        validatorCodeFilter.afterPropertiesSet();
+
+        SmsValidatorCodeFilter smsValidatorCodeFilter = new SmsValidatorCodeFilter();
+        smsValidatorCodeFilter.setAuthenticationFailureHandler(asusAuthenticationFailureHandler);
+        smsValidatorCodeFilter.setSecurityProperties(securityProperties);
+        smsValidatorCodeFilter.afterPropertiesSet();*/
 
 //        http.httpBasic()
-        http.addFilterBefore(validateCodeFilter, UsernamePasswordAuthenticationFilter.class)
-                .formLogin()
-                    .loginPage("/authentication/require")
-                    .loginProcessingUrl("/authentication/form")
-                    .successHandler(imoocAuthenticationSuccessHandler)
-                    .failureHandler(imoocAuthenticationFailureHandler)
-                    .and()
-//                .rememberMe()
-//                    .tokenRepository(persistentTokenRepository())
-//                    .tokenValiditySeconds(securityProperties.getBrowser().getRememberMeSeconds())
-//                    .userDetailsService(userDetailsService)
-//                    .and()
+//        http.addFilterBefore(smsValidatorCodeFilter,UsernamePasswordAuthenticationFilter.class)
+//            .addFilterBefore(validatorCodeFilter, UsernamePasswordAuthenticationFilter.class)
+        http.apply(validatorCodeSecurityConfig)
+                .and()
+                .apply(smsValidateSecurityConfigure)
+                .and()
+//            .rememberMe()
+//                .tokenRepository(persistentTokenRepository())
+//                .tokenValiditySeconds(securityProperties.getBrowser().getTokenExpire())
+//                .userDetailsService(userDetailsService)
+//                .and()
                 .authorizeRequests()
-                    .antMatchers("/authentication/require",securityProperties.getBrowser().getLoginPage(),"/code/image","/code/sms").permitAll()
-                    .anyRequest()
-                    .authenticated()
-                    .and()
-                    .csrf().disable();
+                .antMatchers(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL, securityProperties.getBrowser().getLoginPage(), SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*").permitAll()
+                .anyRequest()
+                .authenticated()
+                .and()
+                .csrf().disable();
+
     }
 }
