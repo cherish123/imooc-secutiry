@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 import javax.sql.DataSource;
 
@@ -48,6 +49,9 @@ public class BrowserConfig extends AbstractChannelSecurityConfig {
 //        return tokenRepository;
 //    }
 
+    @Autowired
+    private SpringSocialConfigurer imoocSpringSocialConfigurer;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -66,9 +70,12 @@ public class BrowserConfig extends AbstractChannelSecurityConfig {
 //        http.addFilterBefore(smsValidatorCodeFilter,UsernamePasswordAuthenticationFilter.class)
 //            .addFilterBefore(validatorCodeFilter, UsernamePasswordAuthenticationFilter.class)
         http.apply(validatorCodeSecurityConfig)
-                .and()
+                    .and()
                 .apply(smsValidateSecurityConfigure)
-                .and()
+                    .and()
+                .apply(imoocSpringSocialConfigurer)
+                    .and()
+
 //            .rememberMe()
 //                .tokenRepository(persistentTokenRepository())
 //                .tokenValiditySeconds(securityProperties.getBrowser().getTokenExpire())
