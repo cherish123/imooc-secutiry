@@ -1,4 +1,4 @@
-package com.imooc.core.config;
+package com.imooc.core.validate.code;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

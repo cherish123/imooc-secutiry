@@ -1,17 +1,14 @@
 package com.imooc.security.browser;
 
 import com.imooc.core.authentication.AbstractChannelSecurityConfig;
-import com.imooc.core.config.SmsValidateSecurityConfigure;
-import com.imooc.core.config.ValidateCodeSecurityConfig;
+import com.imooc.core.validate.code.sms.SmsValidateSecurityConfigure;
+import com.imooc.core.validate.code.ValidateCodeSecurityConfig;
 import com.imooc.core.properties.SecurityProperties;
 import com.imooc.core.validate.code.SecurityConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
-
-import javax.sql.DataSource;
 
 @Configuration
 public class BrowserConfig extends AbstractChannelSecurityConfig {
@@ -82,7 +79,11 @@ public class BrowserConfig extends AbstractChannelSecurityConfig {
 //                .userDetailsService(userDetailsService)
 //                .and()
                 .authorizeRequests()
-                .antMatchers(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL, securityProperties.getBrowser().getLoginPage(), SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*").permitAll()
+                .antMatchers(SecurityConstants.DEFAULT_UNAUTHENTICATION_URL,
+                        securityProperties.getBrowser().getLoginPage(),
+                        SecurityConstants.DEFAULT_VALIDATE_CODE_URL_PREFIX+"/*",
+                        "/user/regist"
+                        ).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

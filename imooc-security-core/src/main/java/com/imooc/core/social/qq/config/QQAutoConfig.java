@@ -1,4 +1,4 @@
-package com.imooc.core.config;
+package com.imooc.core.social.qq.config;
 
 import com.imooc.core.properties.QQProperties;
 import com.imooc.core.properties.SecurityProperties;
