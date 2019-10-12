@@ -1,5 +1,6 @@
 package com.imooc.core.social;
 
+import com.imooc.core.properties.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
+    @Autowired
+    private SecurityProperties securityProperties;
+
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
 
@@ -32,6 +36,10 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
     @Bean
     public SpringSocialConfigurer imoocSocialSecurityConfig() {
-        return new SpringSocialConfigurer();
+//        return new SpringSocialConfigurer();
+        String filterProcessUrl = securityProperties.getSocial().getFilterProcessUrl();
+        //改成自己的配置SpringSocialConfigurer
+        ImoocSpringSocialConfigurer configurer = new ImoocSpringSocialConfigurer(filterProcessUrl);
+        return configurer;
     }
 }

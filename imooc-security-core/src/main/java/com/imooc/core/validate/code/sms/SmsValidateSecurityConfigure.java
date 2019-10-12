@@ -1,4 +1,4 @@
-package com.imooc.core.config;
+package com.imooc.core.validate.code.sms;
 
 import com.imooc.core.validate.code.sms.SmsAuthenticationFilter;
 import com.imooc.core.validate.code.sms.SmsAuthenticationProvider;

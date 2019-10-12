@@ -30,7 +30,8 @@ public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQ> {
      * accessTokenUrl 第4步申请令牌
      */
     public QQServiceProvider(String appId,String appSecret) {
-        super(new OAuth2Template(appId,appSecret,URL_AUTHORIZE,URL_ACCESS_TOKEN));
+        super(new QQOAuth2Template(appId,appSecret,URL_AUTHORIZE,URL_ACCESS_TOKEN));
+        this.appId = appId;
     }
 
 
@@ -38,4 +39,5 @@ public class QQServiceProvider extends AbstractOAuth2ServiceProvider<QQ> {
     public QQ getApi(String accessToken) {
         return new QQImpl(accessToken,appId);
     }
+
 }
